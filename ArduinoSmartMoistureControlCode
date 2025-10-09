@@ -1,0 +1,61 @@
+
+
+//  Pin Setup
+const int soilMoisturePin = A0;   
+const int ledDry = 8;            
+const int ledGood = 9;            
+const int ledWet = 10;            
+
+void setup() {
+  //   Serial Setup  
+  Serial.begin(9600);             
+
+ 
+  pinMode(ledDry, OUTPUT);
+  pinMode(ledGood, OUTPUT);
+  pinMode(ledWet, OUTPUT);
+
+  //  Startup Message 
+  Serial.println("Soil Moisture Monitoring System Initialized");
+  Serial.println("...");
+}
+
+void loop() {
+  //           -
+  //  Soil Levels
+  //           -
+  int sensorValue = analogRead(soilMoisturePin); 
+  
+  // Convert sensor reading into a percentage
+  // (1023 = completely dry, 0 = completely wet)
+  int moisturePercent = map(sensorValue, 1023, 0, 0, 100);
+
+ // Shows what the soil level is         -
+  Serial.print("Soil Moisture: ");
+  Serial.print(moisturePercent);
+  Serial.println("%");
+
+  //           -
+  // Finds what condition the soil is in
+  //           -
+  // Turns LEDs off
+  digitalWrite(ledDry, LOW);
+  digitalWrite(ledGood, LOW);
+  digitalWrite(ledWet, LOW);
+
+  // Makes the proper LED light up
+  if (moisturePercent < 30) {
+    Serial.println("Condition: Too Dry — Water your plant!");
+    digitalWrite(ledDry, HIGH);
+  }
+  else if (moisturePercent >= 30 && moisturePercent <= 70) {
+    Serial.println("Condition: Ideal — Soil moisture is good.");
+    digitalWrite(ledGood, HIGH);
+  }
+  else {
+    Serial.println("Condition: Too Wet — Stop watering!");
+    digitalWrite(ledWet, HIGH);
+  }
+
+  Serial.println("...");
+  delay(3000); 
