@@ -4,7 +4,6 @@ My repository for IT 254 group project.
 Hardware needed
 -Arduino
 -Soil Moisture Sensor
--DHT11 for temp
 -Wires
 -Breadboard
 -Resistor (10k preferably)
