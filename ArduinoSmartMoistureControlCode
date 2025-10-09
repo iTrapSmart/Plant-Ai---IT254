@@ -1,7 +1,7 @@
 
 
 //  Pin Setup
-const int soilMoisturePin = A0;   
+const int soilMoisturePin = 1;   
 const int ledDry = 8;            
 const int ledGood = 9;            
 const int ledWet = 10;            
