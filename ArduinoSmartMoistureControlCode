@@ -45,15 +45,15 @@ void loop() {
 
   // Makes the proper LED light up
   if (moisturePercent < 30) {
-    Serial.println("Condition: Too Dry — Water your plant!");
+    Serial.println("Condition: Too Dry — Water immediately.");
     digitalWrite(ledDry, HIGH);
   }
   else if (moisturePercent >= 30 && moisturePercent <= 70) {
-    Serial.println("Condition: Ideal — Soil moisture is good.");
+    Serial.println("Condition: Preferred — Soil is good.");
     digitalWrite(ledGood, HIGH);
   }
   else {
-    Serial.println("Condition: Too Wet — Stop watering!");
+    Serial.println("Condition: Too Wet — No more water.");
     digitalWrite(ledWet, HIGH);
   }
 
