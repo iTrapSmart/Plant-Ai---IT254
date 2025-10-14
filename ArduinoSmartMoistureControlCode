@@ -1,61 +1,49 @@
 
 
-//  Pin Setup
-const int soilMoisturePin = 1;   
-const int ledDry = 8;            
-const int ledGood = 9;            
-const int ledWet = 10;            
+import serial
+import time
 
-void setup() {
-  //   Serial Setup  
-  Serial.begin(9600);             
 
- 
-  pinMode(ledDry, OUTPUT);
-  pinMode(ledGood, OUTPUT);
-  pinMode(ledWet, OUTPUT);
+arduino = serial.Serial(port='COM3', baudrate=9600, timeout=1)
+time.sleep(2)  
 
-  //  Startup Message 
-  Serial.println("Soil Moisture Monitoring System Initialized");
-  Serial.println("...");
+
+flowers = {
+    1: {"name": "Rose", "good_min": 30, "good_max": 50},
+    2: {"name": "Tulip", "good_min": 40, "good_max": 70},
+    3: {"name": "Sunflower", "good_min": 25, "good_max": 60}
 }
 
-void loop() {
-  //           -
-  //  Soil Levels
-  //           -
-  int sensorValue = analogRead(soilMoisturePin); 
-  
-  // Convert sensor reading into a percentage
-  // (1023 = completely dry, 0 = completely wet)
-  int moisturePercent = map(sensorValue, 1023, 0, 0, 100);
 
- // Shows what the soil level is         -
-  Serial.print("Soil Moisture: ");
-  Serial.print(moisturePercent);
-  Serial.println("%");
+print(" Choose a flower to monitor:")
+for key, flower in flowers.items():
+    print(f"{key}. {flower['name']} (Ideal: {flower['good_min']}–{flower['good_max']}%)")
 
-  //           -
-  // Finds what condition the soil is in
-  //           -
-  // Turns LEDs off
-  digitalWrite(ledDry, LOW);
-  digitalWrite(ledGood, LOW);
-  digitalWrite(ledWet, LOW);
+choice = int(input("Enter the number of your flower: "))
+selected = flowers.get(choice)
 
-  // Makes the proper LED light up
-  if (moisturePercent < 30) {
-    Serial.println("Condition: Too Dry — Water immediately.");
-    digitalWrite(ledDry, HIGH);
-  }
-  else if (moisturePercent >= 30 && moisturePercent <= 70) {
-    Serial.println("Condition: Preferred — Soil is good.");
-    digitalWrite(ledGood, HIGH);
-  }
-  else {
-    Serial.println("Condition: Too Wet — No more water.");
-    digitalWrite(ledWet, HIGH);
-  }
+if not selected:
+    print("Invalid selection.")
+    exit()
 
-  Serial.println("...");
-  delay(3000); 
+print(f"\nMonitoring {selected['name']}...")
+print("------------------------------------------")
+
+
+while True:
+    if arduino.in_waiting > 0:
+        data = arduino.readline().decode('utf-8').strip()
+        if data.isdigit():
+            moisture = int(data)
+            print(f"Soil Moisture: {moisture}%")
+
+            if moisture < selected["good_min"]:
+                print(" Condition: Too Dry — needs watering!")
+            elif selected["good_min"] <= moisture <= selected["good_max"]:
+                print(" Condition: Ideal — perfect moisture level.")
+            else:
+                print(" Condition: Too Wet — stop watering!")
+
+            print("------------------------------------------")
+        time.sleep(2)
+
