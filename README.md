@@ -24,3 +24,5 @@ This project will be using the Arduino to measure soil temperature and moisture 
 https://youtu.be/9XiLo5VAdrc?si=OWSy0TOYUX4fJUuE
 
 This youtube link is my video demonstration on how to make and use the soil moisture arudino build
+
+All is made by me and my group with the help of googling code and testing diagrams using wokwi to test the arduinos virtually.
